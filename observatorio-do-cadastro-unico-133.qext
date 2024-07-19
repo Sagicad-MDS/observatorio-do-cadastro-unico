@@ -1,0 +1,14 @@
+{
+    "type": "mashup",
+    "name": "observatorio-do-cadastro-unico-133",
+    "description": "",
+    "version": "2.0.0",
+    "author": "Ministério do Desenvolvimento e Assistência Social, Família e Combate à Fome",
+    "homepage": "",
+    "keywords": "cadastro único",
+    "license": "",
+    "repository": "",
+    "dependencies": {
+        "qlik-sense": ">=3.0.x"
+    }
+}
