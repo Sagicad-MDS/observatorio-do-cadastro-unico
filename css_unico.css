@@ -11,13 +11,18 @@
 	padding-right: 0 !important;
 }
 
+.d-none {
+	display:none;
+}
+
+
 /* container gráficos*/
 /*.graficos * {
  --grid-gutter: 60px;
 }*/
 
 /* Oculta a barra de menu*/
-@media (max-width: 600px) {
+@media (max-width: 900px) {
     .tab-nav{
         display: none !important;
     }
@@ -187,7 +192,7 @@ Solução para conflito entre css do qliksense e gov.br
 	/*padding: 10px 10px 0 !important;*/
 }
 
-@media (max-width: 600px){
+@media (max-width: 900px){
 	.br-card{
 		margin:0px 8px !important;
 			}

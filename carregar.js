@@ -19,6 +19,16 @@ var conf = {
 		"Aguarde, estamos desvendando conexões sociais importantes ..."
     ],
 	"frases_avaliacao": [
+		"Em julho, recebemos 100 avaliações. Isso mostra o quanto a comunidade está engajada e interessada em melhorar o serviço.",
+		"Nossa nota geral foi de 8,3, o que reflete o comprometimento da equipe e a qualidade do trabalho realizado.",
+		"Recebemos 45 comentários e sugestões, eles são valiosos. Cada um deles nos ajuda a aprimorar o Cadastro Único para atender às necessidades das pessoas.",
+		"Com base nas avaliações, estamos ajustando recursos e funcionalidades para tornar o sistema ainda mais eficiente. Afinal, cada ponto importa!",
+		"Agradecemos a todos que participaram das avaliações. Vocês são parte fundamental do nosso processo de melhoria contínua. Juntos, somos mais fortes.",
+		"As sugestões recebidas estão sendo incorporadas às novas versões. Queremos oferecer a melhor experiência possível a todos os usuários.",
+		"Cada avaliação é uma oportunidade de aprendizado. Continuaremos a ouvir e aprimorar, porque a excelência é um objetivo constante.",
+		"A equipe está dedicada a transformar <i>feedback</i> em ação. Obrigado por compartilharem suas opiniões e nos ajudarem a crescer.",
+		"Avaliações positivas nos motivam, e críticas construtivas nos fazem crescer. É um ciclo virtuoso que nos impulsiona.",
+		"Vocês são os verdadeiros especialistas. Juntos, estamos construindo um Cadastro Único cada vez melhor, e isso é motivo de orgulho!",
         "Sua opinião é importante! Avalie nossa ferramenta e nos ajude a melhorar.",
 		"Compartilhe sua experiência! Deixe uma avaliação e contribua para nosso desenvolvimento.",
 		"Avaliações positivas nos motivam e as negativas nos fortalecem. Obrigado por dedicar um momento para avaliar!",
@@ -30,6 +40,7 @@ var conf = {
 		"Convidamos você a avaliar nossa ferramenta. Suas observações são bem-vindas.",		
 		"Avaliações construtivas nos ajudam a servir melhor nossos cidadãos.",
 		"Considere deixar uma avaliação. Isso nos ajuda a atender às necessidades da comunidade."
+		
     ]
 };
 
@@ -121,8 +132,6 @@ function detectMob() {
 		return navigator.userAgent.match(toMatchItem);
 	});
 }
-
-const mobile = detectMob();
 
 //Meses do ano
 const meses = {
@@ -258,7 +267,16 @@ const campos_descricao = {
 };
 
 var global_grupo_graficos = 'introducao';
+var global_hideloader = true;
+var global_show_boasvindas = false;
+var global_idle_time=0;
+var global_field_municipio_selecionado = false;
+var global_initial_time;
 
+const mobile = detectMob();
+var app = null;
+var selState = null;
+var familias_pessoas = null;
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -279,12 +297,11 @@ require.config({
 });
 
 
-if (typeof app == 'undefined') {
+/*if (typeof app == 'undefined') {
 	var app = null;
 	var selState = null;
-	var field_municipio_selecionado = false;
 	var familias_pessoas = null;
-}
+}*/
 
 function filtro_cras_carregado(){
 	return ($("#QVFIL05").html() != html_observacao_filtro_cras);
@@ -311,8 +328,9 @@ function limpar_filtros(lockedAlso = false) {
 	
 	app.clearAll(lockedAlso);
 	
-	var duration = Date.now() - start;
-	setTimeout(() => { $(".loader").hide(); }, Math.max(min_duration - duration));
+	//var duration = Date.now() - start;
+	//setTimeout(() => { $(".loader").hide(); }, Math.max(min_duration - duration));
+	hideLoader();
 }
 
 
@@ -332,11 +350,12 @@ async function filtros(app, index = 0) {
 		index=i;
 		
 		if (index == 0 || index == 1) {
-			app.getObject('QVFIL01', 'pjc');
+			//app.getObject('QVFIL01', 'pjc');
+			app.getObject('QVFIL01', 'tpEKA');
 			app.getObject('QVFIL02', 'YsQMmz');
 			app.getObject('QVFIL03', 'Nvjva');
 			app.getObject('QVFIL04', 'jpBzzB');
-			if (field_municipio_selecionado){
+			if (global_field_municipio_selecionado){
 				app.getObject('QVFIL05', 'bzpXGRS');
 			}
 		}
@@ -397,6 +416,19 @@ async function filtros(app, index = 0) {
 			app.getObject('B4QVFIL05', 'uFtZvT');
 			app.getObject('B4QVFIL06', 'vaVmsh');
 			app.getObject('B4QVFIL07', 'HPYeD');
+			app.getObject('B4QVFIL08', 'PmNMhPY');
+			app.getObject('B4QVFIL09', 'HCmbpbj');
+			app.getObject('B4QVFIL10', 'ZdxjPzR');
+			app.getObject('B4QVFIL11', 'pJe');
+			app.getObject('B4QVFIL12', 'gNbmPD');
+			app.getObject('B4QVFIL13', 'gQCcB');
+			app.getObject('B4QVFIL14', 'PyRHmq');
+			app.getObject('B4QVFIL15', 'DQwsdpS');
+			app.getObject('B4QVFIL16', 'pbzfKBM');
+			app.getObject('B4QVFIL17', 'HmCVRq');
+			app.getObject('B4QVFIL18', 'KFpjKZ');
+			app.getObject('B4QVFIL19', 'MwmGU');
+			app.getObject('B4QVFIL20', 'eGjD');
 		}
 		if (index == 0 || index == 6) {
 			app.getObject('B6QVFIL01', 'jvzpe');
@@ -448,8 +480,9 @@ async function filtros(app, index = 0) {
 			app.getObject('B8QVFIL13', 'SjAZJ');
 		}
 	}
-	const duration = Date.now() - start;
-	setTimeout(() => { $(".loader").hide(); }, Math.max(min_duration - duration));
+	//const duration = Date.now() - start;
+	//setTimeout(() => { $(".loader").hide(); }, Math.max(min_duration - duration));
+	hideLoader();
 }
 
 //Tentativa de encapsular e carregar apenas quando houvesse necessidade, porém o objeto precisa 
@@ -488,7 +521,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		}
 	}
 	
-	if (grupo_graficos == "introducao") {
+	if (global_grupo_graficos == "introducao") {
 		app.getObject('INQVKPI00', 'WjJPje', { noSelections: no_selection });
 		app.getObject('INQVKPI01', 'd119ca45-bf50-4e7f-aabc-7cc404dce209', { noSelections: no_selection });
 		app.getObject('INQVKPI02', 'f45f8997-b5f9-49e2-8585-77ca19a297d4', { noSelections: no_selection });
@@ -496,7 +529,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('INQVKPI04', 'TQmGyJJ', { noSelections: no_selection });
 		app.getObject('INQV04', 'HeVjYW', { noSelections: no_selection });
 		app.getObject('INQV05', 'DcmAygk', { noSelections: no_selection });
-	} else if (grupo_graficos == "ivcad") {
+	} else if (global_grupo_graficos == "ivcad") {
 		app.getObject('IVQVKPI03', 'ZKYZEw', { noSelections: no_selection });
 		app.getObject('IVQVKPI04', 'ZbdkaV', { noSelections: no_selection });
 		app.getObject('IVQVKPI05', 'hJJmsQw', { noSelections: no_selection });
@@ -507,7 +540,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('IVQVGRA02', 'hMjzJ', { noSelections: no_selection });
 		app.getObject('IVQVGRA03', 'AYeLyP', { noSelections: no_selection });
 		app.getObject('IVQVGRA04', 'bpGvrjV', { noSelections: no_selection });
-	} else if (grupo_graficos == "ivcad_dpi") {
+	} else if (global_grupo_graficos == "ivcad_dpi") {
 		app.getObject('IVDPIQVKPI03', 'ZKYZEw', { noSelections: no_selection });
 		app.getObject('IVDPIQVKPI04', 'ZbdkaV', { noSelections: no_selection });
 		app.getObject('IVDPIQVKPI05', 'hJJmsQw', { noSelections: no_selection });
@@ -529,7 +562,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('IVNCQVGRA02', '4c3ca2ff-d6f2-4466-a276-cda87d363f4b', { noSelections: no_selection });
 		app.getObject('IVNCQVGRA03', 'ZDWdJ', { noSelections: no_selection });
 		app.getObject('IVNCQVGRA04', 'mnbZWE', { noSelections: no_selection });
-	} else if (grupo_graficos == "ivcad_ch") {
+	} else if (global_grupo_graficos == "ivcad_ch") {
 		app.getObject('IVCHQVKPI03', 'ZKYZEw', { noSelections: no_selection });
 		app.getObject('IVCHQVKPI04', 'ZbdkaV', { noSelections: no_selection });
 		app.getObject('IVCHQVKPI05', 'hJJmsQw', { noSelections: no_selection });
@@ -540,7 +573,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('IVCHQVGRA02', 'e7effecf-8c4b-491e-8578-10a65fea5f60', { noSelections: no_selection });
 		app.getObject('IVCHQVGRA03', '8b41f861-e5b9-48b4-bb84-0ed9d46274b1', { noSelections: no_selection });
 		app.getObject('IVCHQVGRA04', 'xFKLURf', { noSelections: no_selection });
-	} else if (grupo_graficos == "ivcad_dr") {
+	} else if (global_grupo_graficos == "ivcad_dr") {
 		app.getObject('IVDRQVKPI03', 'ZKYZEw', { noSelections: no_selection });
 		app.getObject('IVDRQVKPI04', 'ZbdkaV', { noSelections: no_selection });
 		app.getObject('IVDRQVKPI05', 'hJJmsQw', { noSelections: no_selection });
@@ -551,7 +584,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('IVDRQVGRA02', 'bd7977d6-0335-497d-a1e9-552b9f9aac89', { noSelections: no_selection });
 		app.getObject('IVDRQVGRA03', '75219ec7-f9ce-49c7-bd1f-efb9e13f386a', { noSelections: no_selection });
 		app.getObject('IVDRQVGRA04', 'upAcnPC', { noSelections: no_selection });
-	} else if (grupo_graficos == "ivcad_tqa") {
+	} else if (global_grupo_graficos == "ivcad_tqa") {
 		app.getObject('IVTQAQVKPI03', 'ZKYZEw', { noSelections: no_selection });
 		app.getObject('IVTQAQVKPI04', 'ZbdkaV', { noSelections: no_selection });
 		app.getObject('IVTQAQVKPI05', 'hJJmsQw', { noSelections: no_selection });
@@ -562,7 +595,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('IVTQAQVGRA02', 'e02f1a85-ae99-4f0c-a559-ad9404d3f26e', { noSelections: no_selection });
 		app.getObject('IVTQAQVGRA03', '9ea8433c-babc-476c-8856-861524462171', { noSelections: no_selection });
 		app.getObject('IVTQAQVGRA04', 'SMPTg', { noSelections: no_selection });
-	} else if (grupo_graficos == "ivcad_dca") {
+	} else if (global_grupo_graficos == "ivcad_dca") {
 		app.getObject('IVDCAQVKPI03', 'ZKYZEw', { noSelections: no_selection });
 		app.getObject('IVDCAQVKPI04', 'ZbdkaV', { noSelections: no_selection });
 		app.getObject('IVDCAQVKPI05', 'hJJmsQw', { noSelections: no_selection });
@@ -573,7 +606,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('IVDCAQVGRA02', '7f7e941e-f6df-4289-b0c9-d691c27105ee', { noSelections: no_selection });
 		app.getObject('IVDCAQVGRA03', '8c71bb93-0162-43a4-baeb-e840481e4f32', { noSelections: no_selection });
 		app.getObject('IVDCAQVGRA04', 'BJSgSd', { noSelections: no_selection });
-	} else if (grupo_graficos == "identificacao_controle") {
+	} else if (global_grupo_graficos == "identificacao_controle") {
 		app.getObject('ICQVKPI01', '310d6787-b8f5-4075-8f42-a5f796b207f9', { noSelections: no_selection });
 		app.getObject('ICQVKPI02', '3e0d55f7-d29a-435f-9e7c-86cd2c158647', { noSelections: no_selection });
 		app.getObject('ICQVKPI04', 'fe3c9cd0-70e0-4209-aaf9-5e50b66883b6', { noSelections: no_selection });
@@ -586,7 +619,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('ICQVGRA05', 'KJsTQVM', { noSelections: no_selection });
 		//app.getObject('ICQVGRA06', 'NXEYecA', { noSelections: no_selection });
 		app.getObject('B_ICGRA06', 'NXEYecA', { noSelections: no_selection });
-	} else if (grupo_graficos == "caracteristicas_domicilio_01") {
+	} else if (global_grupo_graficos == "caracteristicas_domicilio_01") {
 		app.getObject('CD1QVKPI01', '310d6787-b8f5-4075-8f42-a5f796b207f9', { noSelections: no_selection });
 		app.getObject('CD1QVKPI02', '3e0d55f7-d29a-435f-9e7c-86cd2c158647', { noSelections: no_selection });
 		app.getObject('CD1QVKPI04', 'fe3c9cd0-70e0-4209-aaf9-5e50b66883b6', { noSelections: no_selection });
@@ -597,7 +630,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('CD1QVGRA03', '5af21425-82eb-46ea-b5d5-7f304cc0a344', { noSelections: no_selection });
 		app.getObject('CD1QVGRA04', 'Bzk', { noSelections: no_selection });
 		app.getObject('CD1QVGRA05', 'ZMZyHw', { noSelections: no_selection });
-	} else if (grupo_graficos == "caracteristicas_domicilio_02") {
+	} else if (global_grupo_graficos == "caracteristicas_domicilio_02") {
 		app.getObject('CD2QVKPI01', '310d6787-b8f5-4075-8f42-a5f796b207f9', { noSelections: no_selection });
 		app.getObject('CD2QVKPI02', '3e0d55f7-d29a-435f-9e7c-86cd2c158647', { noSelections: no_selection });
 		app.getObject('CD2QVKPI04', 'fe3c9cd0-70e0-4209-aaf9-5e50b66883b6', { noSelections: no_selection });
@@ -609,7 +642,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('CD2QVGRA04', 'axbVv', { noSelections: no_selection });
 		app.getObject('CD2QVGRA05', 'bVhUBP', { noSelections: no_selection });
 		app.getObject('CD2QVGRA06', 'kjPxKae', { noSelections: no_selection });
-	} else if (grupo_graficos == "familia") {
+	} else if (global_grupo_graficos == "familia") {
 		app.getObject('FGQVKPI01', '310d6787-b8f5-4075-8f42-a5f796b207f9', { noSelections: no_selection });
 		app.getObject('FGQVKPI02', '3e0d55f7-d29a-435f-9e7c-86cd2c158647', { noSelections: no_selection });
 		app.getObject('FGQVKPI04', 'fe3c9cd0-70e0-4209-aaf9-5e50b66883b6', { noSelections: no_selection });
@@ -627,7 +660,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		//app.getObject('FGQVGRA05', 'JqBNyp', { noSelections: no_selection });
 		app.getObject('FGQVGRA03', 'sBSSHeZ', { noSelections: no_selection });
 		app.getObject('FGQVGRA04', 'gCQbejS', { noSelections: no_selection });
-		} else if (grupo_graficos == "beneficios_sociais") {
+		} else if (global_grupo_graficos == "beneficios_sociais") {
 		app.getObject('BSQVKPI01', '310d6787-b8f5-4075-8f42-a5f796b207f9', { noSelections: no_selection });
 		app.getObject('BSQVKPI02', '3e0d55f7-d29a-435f-9e7c-86cd2c158647', { noSelections: no_selection });
 		app.getObject('BSQVKPI04', 'fe3c9cd0-70e0-4209-aaf9-5e50b66883b6', { noSelections: no_selection });
@@ -639,7 +672,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('BSQVGRA04', 'FymUHrw', { noSelections: no_selection });
 		app.getObject('BSQVGRA05', 'NnkfFpm', { noSelections: no_selection });
 		app.getObject('BSQVGRA06', 'JUqtPG', { noSelections: no_selection });
-	} else if (grupo_graficos == "identificacao_pessoa") {
+	} else if (global_grupo_graficos == "identificacao_pessoa") {
 		app.getObject('IPQVKPI01', '310d6787-b8f5-4075-8f42-a5f796b207f9', { noSelections: no_selection });
 		app.getObject('IPQVKPI02', '3e0d55f7-d29a-435f-9e7c-86cd2c158647', { noSelections: no_selection });
 		app.getObject('IPQVKPI04', 'fe3c9cd0-70e0-4209-aaf9-5e50b66883b6', { noSelections: no_selection });
@@ -654,7 +687,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('IPQVGRA03', 'pHbRxXh', { noSelections: no_selection });
 		app.getObject('IPQVGRA03', 'Wjqpsq', { noSelections: no_selection });
 		app.getObject('IPQVGRA04', 'vSXCVpU', { noSelections: no_selection });
-	} else if (grupo_graficos == "ajuda_deficiencia") {
+	} else if (global_grupo_graficos == "ajuda_deficiencia") {
 		app.getObject('PDQVKPI01', '310d6787-b8f5-4075-8f42-a5f796b207f9', { noSelections: no_selection });
 		app.getObject('PDQVKPI02', '3e0d55f7-d29a-435f-9e7c-86cd2c158647', { noSelections: no_selection });
 		app.getObject('PDQVKPI04', 'fe3c9cd0-70e0-4209-aaf9-5e50b66883b6', { noSelections: no_selection });
@@ -666,8 +699,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('PDQVGRA04', 'tNJbnK', { noSelections: no_selection });
 		app.getObject('PDQVGRA05', 'XpszAbP', { noSelections: no_selection });
 		app.getObject('PDQVGRA06', 'UYyZ', { noSelections: no_selection });
-
-	} else if (grupo_graficos == "escolaridade") {
+	} else if (global_grupo_graficos == "escolaridade") {
 		app.getObject('ESQVKPI01', '310d6787-b8f5-4075-8f42-a5f796b207f9', { noSelections: no_selection });
 		app.getObject('ESQVKPI02', '3e0d55f7-d29a-435f-9e7c-86cd2c158647', { noSelections: no_selection });
 		app.getObject('ESQVKPI04', 'fe3c9cd0-70e0-4209-aaf9-5e50b66883b6', { noSelections: no_selection });
@@ -677,7 +709,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('ESQVGRA02', 'LJHGCM', { noSelections: no_selection });
 		app.getObject('ESQVGRA03', 'pmUMT', { noSelections: no_selection });
 		app.getObject('ESQVGRA04', 'KqhHuak', { noSelections: no_selection });
-	} else if (grupo_graficos == "trabalho_remuneracao") {
+	} else if (global_grupo_graficos == "trabalho_remuneracao") {
 		app.getObject('TRQVKPI01', '310d6787-b8f5-4075-8f42-a5f796b207f9', { noSelections: no_selection });
 		app.getObject('TRQVKPI02', '3e0d55f7-d29a-435f-9e7c-86cd2c158647', { noSelections: no_selection });
 		app.getObject('TRQVKPI04', 'fe3c9cd0-70e0-4209-aaf9-5e50b66883b6', { noSelections: no_selection });
@@ -688,7 +720,7 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 		app.getObject('TRQVGRA01', 'YnBmwpB', { noSelections: no_selection });
 		app.getObject('TRQVGRA02', 'DBLLJtK', { noSelections: no_selection });
 		app.getObject('TRQVGRA03', 'YbmKHP', { noSelections: no_selection });
-	} else if (grupo_graficos == "tabela_familias_pessoas") {
+	} else if (global_grupo_graficos == "tabela_familias_pessoas") {
 		app.getObject('TBQVTAB01', 'cf0ef996-e6d9-4695-aa83-c8af0e8ee01a').then(
 		//app.getObject('TBQVTAB01', 'AJQuMP').then(
 			function (reply) {
@@ -704,7 +736,6 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 			});
 			
 			app.getObject('TBQVTAB02', 'e8728a40-cb5e-4bb0-a86f-65c777b958e7').then(
-			//app.getObject('TBQVTAB02', 'nCJJbb').then(
 			function (reply) {
 				$('#exportar_tabela_uf').click(function () {
 					var qTable = qlik.table(reply);
@@ -716,81 +747,71 @@ function graficos(app, qlik, no_selection = false, grupo_graficos = "introducao"
 					abrir_modal_avaliacao();
 				});
 			});
-			app.getObject('TBQVTAB03', '5b027e83-ee05-4fff-9384-197cde0588be').then(
-			//app.getObject('TBQVTAB03', 'dXGPe').then(
-			function (reply) {
-				$('#exportar_tabela_mu').click(function () {
-					var qTable = qlik.table(reply);
-					qTable.exportData({
-						format: 'OOXML',
-						filename: 'municipio_tabela_qtd_familias_pessoas.csv', 
-						download: true
-					});
-					abrir_modal_avaliacao();
-				});
-			});
+			
+			tabelas_municipio_cras(qlik);
+			
 	} 
-	const duration = Date.now() - start;
-	setTimeout(() => { $(".loader").hide(); }, Math.max(min_duration - duration));
+	//const duration = Date.now() - start;
+	//setTimeout(() => { $(".loader").hide(); }, Math.max(min_duration - duration));
+	hideLoader();
 }
 
-function listener() {
-	if (selState.selections !== undefined) {
-		if (selState.selections[0].fieldName == "anomes") {
-			let qSelected = selState.selections[0].qSelected;
-			//Foi necessário adicionar o dia para que funcionasse no Firefox.
-			let d = new Date(qSelected + '/01');
-			let month = d.getUTCMonth() + 1;
-			let year = d.getUTCFullYear();
-			let t = "Referência: " + meses[month] + " de " + year;
-			$("#span_referencia_cadastro").html(t);
-		};
-		var qtd_filtros = selState.selections.length - 1;
+function tabelas_municipio_cras(qlik){
+	$("#TBQVTAB03").html('<div class="loading"></div>');
+	$("#TBQVTAB04").html('<div class="loading"></div>');
+	$("#TBQVTAB05").html('<div class="loading"></div>');
 		
-		field_municipio_selecionado = 	check_if_field_selected("uf_municipio", true) ||
-										check_if_field_selected("nome_municipio", true);
-		if (field_municipio_selecionado){
-			carregar_filtro_cras(app);
-		}else{
-			remover_filtro_cras(app);
-		}
-	
-		$("#span_filtros_aplicados").html('Filtros aplicados: ' + qtd_filtros);
-		if (qtd_filtros > 0) {
-			var texto = "";
-			selState.selections.forEach((sel) => {
-				var fieldName = sel.fieldName.toLowerCase();
-				var campo_split = fieldName.split("#");
-				campo = ((campo_split.length > 1) ? campo_split[1] : campo_split[0]);
-				descricao = campos_descricao[campo];
-				if (descricao == undefined) {
-					descricao = campo;
-				}
-				texto += "<b>" + descricao + "</b> = " + sel.qSelected + "<br>"
-			}
-			);
-			$("#modal_filtros_aplicados_body").html(texto);
-		}
-		if (qtd_filtros > 0) {
-			$("#span_filtros_mostrar").show();
-			$("#span_filtros_excluir").show();
-		} else {
-			$("#span_filtros_mostrar").hide();
-			$("#span_filtros_excluir").hide();
-		}
+	if (global_field_municipio_selecionado){
+		$("#div_tabela_municipio").hide();
+		$("#div_tabela_cras").show();	
+		app.getObject('TBQVTAB04', '5b027e83-ee05-4fff-9384-197cde0588be').then(
+		function (reply) {
+			$('#exportar_tabela_mu_2').click(function () {
+				var qTable = qlik.table(reply);
+				qTable.exportData({
+					format: 'OOXML',
+					filename: 'municipio_tabela_qtd_familias_pessoas.csv', 
+					download: true
+				});
+				abrir_modal_avaliacao();
+			});
+		});
+		
+		app.getObject('TBQVTAB05', 'QpkpBm').then(
+		function (reply) {
+			$('#exportar_tabela_cr').click(function () {
+				var qTable = qlik.table(reply);
+				qTable.exportData({
+					format: 'OOXML',
+					filename: 'cras_tabela_qtd_familias_pessoas.csv', 
+					download: true
+				});
+				abrir_modal_avaliacao();
+			});
+		});
+	}else{
+		$("#div_tabela_cras").hide();
+		$("#div_tabela_municipio").show();
+		app.getObject('TBQVTAB03', '5b027e83-ee05-4fff-9384-197cde0588be').then(
+		function (reply) {
+			$('#exportar_tabela_mu_1').click(function () {
+				var qTable = qlik.table(reply);
+				qTable.exportData({
+					format: 'OOXML',
+					filename: 'municipio_tabela_qtd_familias_pessoas.csv', 
+					download: true
+				});
+				abrir_modal_avaliacao();
+			});
+		});
 	}
-
-	app.getList("SelectionObject", function (reply) {
-		sessionStorage.setItem("selections", JSON.stringify(reply.qSelectionObject.qSelections))
-	});
-};
-
+}
 
 function check_if_field_selected(field, apenas_um_selecionado=false) {
 	var retorno = false;
 	if (selState.selections !== undefined) {
 			selState.selections.forEach(function (sel, i) {
-				if (sel.fieldName == field){
+				if (sel.fieldName.toLowerCase().trim().replace('=','') == field.toLowerCase().trim()){
 					if (apenas_um_selecionado==true){
 						if (sel.qSelected.indexOf(',')==-1 && 
 							sel.qSelected.indexOf(' of ')==-1){
@@ -833,15 +854,69 @@ require(["js/qlik"], function (qlik) {
 	});
 
 	if (app === null) {
-		//app = qlik.openApp('822d228d-05de-4f57-b03a-3ee8d8b09568', config);
-		//app = qlik.openApp('7451d577-3580-49ee-9996-69123b0d35a3', config);
-		//app = qlik.openApp('6c3cd825-854a-4c7b-bebb-c8923fbc5a9c', config);
-		//app = qlik.openApp('cdd64086-5616-47ce-9b58-5494a940ba03', config);
-		app = qlik.openApp('99994c4c-7bf6-4fad-b269-d5ad13cd57f4', config);
+		app = qlik.openApp('73e5c5de-0577-4aa9-a0a2-b7b359c3ae36', config);
 	}
+	
+	function listener() {
+		$(".loader").show();
+		if (selState.selections !== undefined) {
+			if (selState.selections[0].fieldName == "anomes") {
+				let qSelected = selState.selections[0].qSelected;
+				//Foi necessário adicionar o dia para que funcionasse no Firefox.
+				let d = new Date(qSelected + '/01');
+				let month = d.getUTCMonth() + 1;
+				let year = d.getUTCFullYear();
+				let t = "Referência: " + meses[month] + " de " + year;
+				$("#span_referencia_cadastro").html(t);
+			};
+			var qtd_filtros = selState.selections.length - 1;
 
+			global_field_municipio_selecionado = 	check_if_field_selected("uf_municipio", true) ||
+											check_if_field_selected("nome_municipio", true) ||
+											check_if_field_selected("codigo_ibge", true) ||
+											check_if_field_selected("num(codigo_ibge)", true) ||
+											check_if_field_selected("unidade_territorial_temp_5e5abb12-039a-22b5-3c86-cbc11646.IBGE7-geocodigo", true);
 
+			if (global_field_municipio_selecionado){
+				carregar_filtro_cras(app);
+			}else{
+				remover_filtro_cras(app);
+			}
 
+			$("#span_filtros_aplicados").html('Filtros aplicados: ' + qtd_filtros);
+			if (qtd_filtros > 0) {
+				var texto = "";
+				selState.selections.forEach((sel) => {
+					var fieldName = sel.fieldName.toLowerCase();
+					var campo_split = fieldName.split("#");
+					campo = ((campo_split.length > 1) ? campo_split[1] : campo_split[0]);
+					descricao = campos_descricao[campo];
+					if (descricao == undefined) {
+						descricao = campo;
+					}
+					texto += "<b>" + descricao + "</b> = " + sel.qSelected + "<br>"
+				}
+				);
+				$("#modal_filtros_aplicados_body").html(texto);
+			}
+			if (qtd_filtros > 0) {
+				$("#span_filtros_mostrar").show();
+				$("#span_filtros_excluir").show();
+			} else {
+				$("#span_filtros_mostrar").hide();
+				$("#span_filtros_excluir").hide();
+			}
+		}
+
+		app.getList("SelectionObject", function (reply) {
+			sessionStorage.setItem("selections", JSON.stringify(reply.qSelectionObject.qSelections))
+		});
+
+		if (global_grupo_graficos == "tabela_familias_pessoas") {
+			tabelas_municipio_cras(qlik);
+			$(".loader").show();
+		}
+	} 
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////FILTROS APLICADOS///////////////////////////////////////
@@ -858,299 +933,298 @@ require(["js/qlik"], function (qlik) {
 	//filtros(app);
 	graficos(app, qlik, mobile);
 
-	var idleTime = 0;
-
 	function timerIncrement() {
-		idleTime = idleTime + 1;
-		if (idleTime >= 10) { // 10 minutos
+		global_idle_time = global_idle_time + 1;
+		if (global_idle_time >= 10) { // 10 minutos
 			app.close();
 			$("#container_modal_inatividade").css("display", "flex");
-			console.log((Date.now()-initial_time)/1000);
 		}
 	}
 
-$(document).ready(function () {
-		const initial_time = Date.now();
+	$(document).ready(function () {
+			global_initial_time = Date.now();
 
-		// Increment the idle time counter every minute.
-		var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
-
-		// Zero the idle timer on mouse movement.
-		$(this).mousemove(function (e) {
-			idleTime = 0;
-		});
-		
-		$(this).mousedown(function (e) {
-			idleTime = 0;
-			console.log((Date.now()-initial_time)/1000);
+			// Increment the idle time counter every minute.
+			var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+			var hideLoaderInterval = setInterval(hideLoader, 3000); // 3 segundos
 			
-			if ((Date.now()-initial_time)/1000>180){
-				abrir_modal_avaliacao();
-			}
-		});
-		
-		$(this).keypress(function (e) {
-			idleTime = 0;
-		});
-
-		//Loads and applies selections from local storage on document ready.
-		var selections = JSON.parse(sessionStorage.getItem("selections"));
-		if (typeof selections === 'undefined' || selections == null) {
-			app.clearAll(true);
-			app.field("im_faixa_renda_per_capita").selectValues([10,20], false, true);
-			$("#container_modal_boasvindas").css("display", "flex");
-		} else {
-			if (selections.length > 1) {
-				selections.forEach(function (selection) {
-					app.field(selection.qField).selectMatch(selection.qSelected, true);
-				});			
-			}else{
+			//Loads and applies selections from local storage on document ready.
+			var selections = JSON.parse(sessionStorage.getItem("selections"));
+			if (typeof selections === 'undefined' || selections == null) {
+				app.clearAll(true);
 				app.field("im_faixa_renda_per_capita").selectValues([10,20], false, true);
-				$("#container_modal_boasvindas").css("display", "flex");
+				global_show_boasvindas = true;
+			} else {
+				if (selections.length > 1) {
+					global_show_boasvindas = false;
+					selections.forEach(function (selection) {
+						app.field(selection.qField).selectMatch(selection.qSelected, true);
+					});			
+				}else{
+					app.field("im_faixa_renda_per_capita").selectValues([10,20], false, true);
+					global_show_boasvindas = true;
+				}
 			}
-		}
-		
-		
 
-		//Adicionar comportamento de clique nos filtros
-		$("#icon_filtro").click(function () {
-			$("#filtros").toggle(0, function () {
-				if ($("#filtros").is(":visible")) {
+
+
+			//Adicionar comportamento de clique nos filtros
+			$("#icon_filtro").click(function () {
+				$("#filtros").toggle(0, function () {
+					if ($("#filtros").is(":visible")) {
+						filtros(app);
+						$("#exportar_tabela").hide();
+					}
+					else
+						$("#exportar_tabela").show();
+				});
+
+				$("#graficos_" + global_grupo_graficos).toggle(0, function () {
+					if ($("#graficos_" + global_grupo_graficos).is(":visible")) {
+						graficos(app, qlik, mobile, global_grupo_graficos);
+					}
+				});
+			});
+
+			//configurando comportamentos de click
+			$("#aplicar_filtros").click(function () {
+				$("#icon_filtro").click();
+			});
+
+			$("#span_filtros_mostrar").click(function () {
+				$("#container_modal_filtros_aplicados").css("display", "flex");
+			});
+
+
+			$("#tab_introducao").click(function () {
+				graficos(app, qlik, mobile, 'introducao');
+			});
+			$("#tab_ivcad").click(function () {
+				graficos(app, qlik, mobile, 'ivcad');
+			});
+			$("#tab_identificacao_controle").click(function () {
+				graficos(app, qlik, mobile, 'identificacao_controle');
+			});
+			$("#tab_caracteristicas_domicilio_01").click(function () {
+				graficos(app, qlik, mobile, 'caracteristicas_domicilio_01');
+			});
+			$("#tab_caracteristicas_domicilio_02").click(function () {
+				graficos(app, qlik, mobile, 'caracteristicas_domicilio_02');
+			});
+			$("#tab_familia").click(function () {
+				graficos(app, qlik, mobile, 'familia');
+			});
+			$("#tab_beneficios_sociais").click(function () {
+				graficos(app, qlik, mobile, 'beneficios_sociais');
+			});
+			$("#tab_identificacao_pessoa").click(function () {
+				graficos(app, qlik, mobile, 'identificacao_pessoa');
+			});
+			$("#tab_ajuda_deficiencia").click(function () {
+				graficos(app, qlik, mobile, 'ajuda_deficiencia');
+			});
+			$("#tab_escolaridade").click(function () {
+				graficos(app, qlik, mobile, 'escolaridade');
+			});
+			$("#tab_trabalho_remuneracao").click(function () {
+				graficos(app, qlik, mobile, 'trabalho_remuneracao');
+			});
+			$("#tab_tabela_familias_pessoas").click(function () {
+				graficos(app, qlik, mobile, 'tabela_familias_pessoas');
+			});
+
+
+
+			$("#menu_introducao").click(function () {
+				graficos(app, qlik, mobile, 'introducao');
+				$("#menu_fechar").click();
+			});
+			$("#menu_ivcad").click(function () {
+				graficos(app, qlik, mobile, 'ivcad');
+				$("#menu_fechar").click();
+			});
+			$("#menu_identificacao_controle").click(function () {
+				graficos(app, qlik, mobile, 'identificacao_controle');
+				$("#menu_fechar").click();
+			});
+			$("#menu_caracteristicas_domicilio_01").click(function () {
+				graficos(app, qlik, mobile, 'caracteristicas_domicilio_01');
+				$("#menu_fechar").click();
+			});
+			$("#menu_caracteristicas_domicilio_02").click(function () {
+				graficos(app, qlik, mobile, 'caracteristicas_domicilio_02');
+				$("#menu_fechar").click();
+			});
+			$("#menu_familia").click(function () {
+				graficos(app, qlik, mobile, 'familia');
+				$("#menu_fechar").click();
+			});
+			$("#menu_beneficios_sociais").click(function () {
+				graficos(app, qlik, mobile, 'beneficios_sociais');
+				$("#menu_fechar").click();
+			});
+			$("#menu_identificacao_pessoa").click(function () {
+				graficos(app, qlik, mobile, 'identificacao_pessoa');
+				$("#menu_fechar").click();
+			});
+			$("#menu_ajuda_deficiencia").click(function () {
+				graficos(app, qlik, mobile, 'ajuda_deficiencia');
+				$("#menu_fechar").click();
+			});
+			$("#menu_escolaridade").click(function () {
+				graficos(app, qlik, mobile, 'escolaridade');
+				$("#menu_fechar").click();
+			});
+			$("#menu_trabalho_remuneracao").click(function () {
+				graficos(app, qlik, mobile, 'trabalho_remuneracao');
+				$("#menu_fechar").click();
+			});
+			$("#menu_tabela_familias_pessoas").click(function () {
+				graficos(app, qlik, mobile, 'tabela_familias_pessoas');
+				$("#menu_fechar").click();
+			});
+
+
+
+
+			$("#btn_caracteristicas_domicilio_01").click(function () {
+				graficos(app, qlik, mobile, 'caracteristicas_domicilio_01');
+				$('#li_caracteristicas_domicilio_01').addClass('active');
+			});
+			$("#btn_caracteristicas_domicilio_02").click(function () {
+				graficos(app, qlik, mobile, 'caracteristicas_domicilio_02');
+				$('#li_caracteristicas_domicilio_01').addClass('active');
+			});
+			$("#btn_familia").click(function () {
+				graficos(app, qlik, mobile, 'familia');
+			});
+			$("#btn_beneficios_sociais").click(function () {
+				graficos(app, qlik, mobile, 'beneficios_sociais');
+			});
+
+			//Configurando a navegacao nas dimensoes da pagina do IVCAD atraves do icone
+			const ivcad_icon_menu = document.querySelectorAll('.ivcad-icon-area');
+			ivcad_icon_menu.forEach(elem => elem.addEventListener('click', ivcad_trocar_dimensao));
+			function ivcad_trocar_dimensao(e) {
+			  graficos(app, qlik, mobile, e.target.dataset.text);
+			}
+
+
+		var targetNode = document.getElementById("loader");
+		var observer_loader = new MutationObserver(function(){
+			if(targetNode.style.display != 'none'){
+				window.clearInterval(interval);
+				time_start_loading=Date.now();
+				carregarFraseLoading();
+				interval = setInterval(carregarFraseLoading, 5000);
+			}else{
+				window.clearInterval(interval);
+			}
+		});
+		observer_loader.observe(targetNode, { "attributes": true, "childList": true });
+
+
+		// Observer para os elementos dos filtros
+		var observer_accordion = new MutationObserver(function (mutations) {
+			document.querySelectorAll('[data-toggle="accordion"]').forEach((target) => {
+				if(target.getAttribute("data-visible") == "true"){
 					filtros(app);
-					$("#exportar_tabela").hide();
-				}
-				else
-					$("#exportar_tabela").show();
-			});
-
-			$("#graficos_" + global_grupo_graficos).toggle(0, function () {
-				if ($("#graficos_" + global_grupo_graficos).is(":visible")) {
-					graficos(app, qlik, mobile, global_grupo_graficos);
 				}
 			});
 		});
 
-		//configurando comportamentos de click
-		$("#aplicar_filtros").click(function () {
-			$("#icon_filtro").click();
-		});
+		// configuração do observador:
+		var config = { attributes: true, childList: true, characterData: true };
 
-		$("#span_filtros_mostrar").click(function () {
-			$("#container_modal_filtros_aplicados").css("display", "flex");
-		});
-
-
-		$("#tab_introducao").click(function () {
-			graficos(app, qlik, mobile, 'introducao');
-		});
-		$("#tab_ivcad").click(function () {
-			graficos(app, qlik, mobile, 'ivcad');
-		});
-		$("#tab_identificacao_controle").click(function () {
-			graficos(app, qlik, mobile, 'identificacao_controle');
-		});
-		$("#tab_caracteristicas_domicilio_01").click(function () {
-			graficos(app, qlik, mobile, 'caracteristicas_domicilio_01');
-		});
-		$("#tab_caracteristicas_domicilio_02").click(function () {
-			graficos(app, qlik, mobile, 'caracteristicas_domicilio_02');
-		});
-		$("#tab_familia").click(function () {
-			graficos(app, qlik, mobile, 'familia');
-		});
-		$("#tab_beneficios_sociais").click(function () {
-			graficos(app, qlik, mobile, 'beneficios_sociais');
-		});
-		$("#tab_identificacao_pessoa").click(function () {
-			graficos(app, qlik, mobile, 'identificacao_pessoa');
-		});
-		$("#tab_ajuda_deficiencia").click(function () {
-			graficos(app, qlik, mobile, 'ajuda_deficiencia');
-		});
-		$("#tab_escolaridade").click(function () {
-			graficos(app, qlik, mobile, 'escolaridade');
-		});
-		$("#tab_trabalho_remuneracao").click(function () {
-			graficos(app, qlik, mobile, 'trabalho_remuneracao');
-		});
-		$("#tab_tabela_familias_pessoas").click(function () {
-			graficos(app, qlik, mobile, 'tabela_familias_pessoas');
-		});
+		// passar o nó alvo, bem como as opções de observação
+		document.querySelectorAll('[data-toggle="accordion"]').forEach((target) => {
+			observer_accordion.observe(target, config);
+			});
 
 
+		// URL to fetch the JSON data
+		const url_areas_especiais = "https://aplicacoes.cidadania.gov.br/vis/servicos/cidades.php?ot=a";
 
-		$("#menu_introducao").click(function () {
-			graficos(app, qlik, mobile, 'introducao');
-			$("#menu_fechar").click();
-		});
-		$("#menu_ivcad").click(function () {
-			graficos(app, qlik, mobile, 'ivcad');
-			$("#menu_fechar").click();
-		});
-		$("#menu_identificacao_controle").click(function () {
-			graficos(app, qlik, mobile, 'identificacao_controle');
-			$("#menu_fechar").click();
-		});
-		$("#menu_caracteristicas_domicilio_01").click(function () {
-			graficos(app, qlik, mobile, 'caracteristicas_domicilio_01');
-			$("#menu_fechar").click();
-		});
-		$("#menu_caracteristicas_domicilio_02").click(function () {
-			graficos(app, qlik, mobile, 'caracteristicas_domicilio_02');
-			$("#menu_fechar").click();
-		});
-		$("#menu_familia").click(function () {
-			graficos(app, qlik, mobile, 'familia');
-			$("#menu_fechar").click();
-		});
-		$("#menu_beneficios_sociais").click(function () {
-			graficos(app, qlik, mobile, 'beneficios_sociais');
-			$("#menu_fechar").click();
-		});
-		$("#menu_identificacao_pessoa").click(function () {
-			graficos(app, qlik, mobile, 'identificacao_pessoa');
-			$("#menu_fechar").click();
-		});
-		$("#menu_ajuda_deficiencia").click(function () {
-			graficos(app, qlik, mobile, 'ajuda_deficiencia');
-			$("#menu_fechar").click();
-		});
-		$("#menu_escolaridade").click(function () {
-			graficos(app, qlik, mobile, 'escolaridade');
-			$("#menu_fechar").click();
-		});
-		$("#menu_trabalho_remuneracao").click(function () {
-			graficos(app, qlik, mobile, 'trabalho_remuneracao');
-			$("#menu_fechar").click();
-		});
-		$("#menu_tabela_familias_pessoas").click(function () {
-			graficos(app, qlik, mobile, 'tabela_familias_pessoas');
-			$("#menu_fechar").click();
-		});
-
-
-
-
-		$("#btn_caracteristicas_domicilio_01").click(function () {
-			graficos(app, qlik, mobile, 'caracteristicas_domicilio_01');
-			$('#li_caracteristicas_domicilio_01').addClass('active');
-		});
-		$("#btn_caracteristicas_domicilio_02").click(function () {
-			graficos(app, qlik, mobile, 'caracteristicas_domicilio_02');
-			$('#li_caracteristicas_domicilio_01').addClass('active');
-		});
-		$("#btn_familia").click(function () {
-			graficos(app, qlik, mobile, 'familia');
-		});
-		$("#btn_beneficios_sociais").click(function () {
-			graficos(app, qlik, mobile, 'beneficios_sociais');
-		});
-		
-		//Configurando a navegacao nas dimensoes da pagina do IVCAD atraves do icone
-		const ivcad_icon_menu = document.querySelectorAll('.ivcad-icon-area');
-		ivcad_icon_menu.forEach(elem => elem.addEventListener('click', ivcad_trocar_dimensao));
-		function ivcad_trocar_dimensao(e) {
-		  graficos(app, qlik, mobile, e.target.dataset.text);
-		}
-	
-	
-	var targetNode = document.getElementById("loader");
-	var observer_loader = new MutationObserver(function(){
-    if(targetNode.style.display != 'none'){
-		window.clearInterval(interval);
-		time_start_loading=Date.now();
-		carregarFraseLoading();
-		interval = setInterval(carregarFraseLoading, 5000);
-    }else{
-		window.clearInterval(interval);
-	}
-});
-observer_loader.observe(targetNode, { "attributes": true, "childList": true });
-
-
-// Observer para os elementos dos filtros
-var observer_accordion = new MutationObserver(function (mutations) {
-	document.querySelectorAll('[data-toggle="accordion"]').forEach((target) => {
-		if(target.getAttribute("data-visible") == "true"){
-			filtros(app);
-		}
-	});
- });
-
-// configuração do observador:
-var config = { attributes: true, childList: true, characterData: true };
-
-// passar o nó alvo, bem como as opções de observação
-document.querySelectorAll('[data-toggle="accordion"]').forEach((target) => {
-	observer_accordion.observe(target, config);
-	});
-
-
-// URL to fetch the JSON data
-const url_areas_especiais = "https://aplicacoes.cidadania.gov.br/vis/servicos/cidades.php?ot=a";
-
-// Fetch the JSON data
-fetch(url_areas_especiais)
-	.then(response => response.json())
-	.then(data => {
-		const select = document.getElementById("select_areas_especiais");
-
-		let option = document.createElement("option");
-		option.value = '-1';
-		option.textContent = 'Selecione uma das áreas abaixo';
-		select.appendChild(option);
-
-		// Iterate through the data and add options dynamically
-		for (const key in data) {
-			if (data.hasOwnProperty(key) && typeof data[key] === "object") {
-				const areaName = data[key]["nome"];
-				const ibgeCode = data[key]["ibge"];
-
-				const option = document.createElement("option");
-				option.value = ibgeCode;
-				option.textContent = areaName;
-
-				select.appendChild(option);
-			}
-		}
-	})
-	.catch(error => {
-		console.error("Error fetching data:", error);
-	});
-
-
-const select = document.getElementById("select_areas_especiais");
-const textarea = document.getElementById("txtarea_lista_mun");
-const baseUrl = "https://aplicacoes.cidadania.gov.br/vis/servicos/cidades.php?ot=a&area=";
-
-// Função para buscar os códigos IBGE com base no valor selecionado
-function fetchIBGECodes() {
-	const selectedValue = select.value;
-	if (selectedValue>-1){
-		const url = baseUrl + selectedValue;
-
-		fetch(url)
+		// Fetch the JSON data
+		fetch(url_areas_especiais)
 			.then(response => response.json())
 			.then(data => {
-				// Limpa o conteúdo existente na textarea
-				textarea.value = "";
-				textarea.value = data["0"]["str_ibges"].replaceAll(",","\n");
+				const select = document.getElementById("select_areas_especiais");
+
+				let option = document.createElement("option");
+				option.value = '-1';
+				option.textContent = 'Selecione uma das áreas abaixo';
+				select.appendChild(option);
+
+				// Iterate through the data and add options dynamically
+				for (const key in data) {
+					if (data.hasOwnProperty(key) && typeof data[key] === "object") {
+						const areaName = data[key]["nome"];
+						const ibgeCode = data[key]["ibge"];
+
+						const option = document.createElement("option");
+						option.value = ibgeCode;
+						option.textContent = areaName;
+
+						select.appendChild(option);
+					}
+				}
 			})
 			.catch(error => {
-				console.error("Erro ao buscar dados:", error);
+				console.error("Error fetching data:", error);
 			});
-	}else{
-		textarea.value = "";
+
+
+		const select = document.getElementById("select_areas_especiais");
+		const textarea = document.getElementById("txtarea_lista_mun");
+		const baseUrl = "https://aplicacoes.cidadania.gov.br/vis/servicos/cidades.php?ot=a&area=";
+
+		// Função para buscar os códigos IBGE com base no valor selecionado
+		function fetchIBGECodes() {
+			const selectedValue = select.value;
+			if (selectedValue>-1){
+				const url = baseUrl + selectedValue;
+
+				fetch(url)
+					.then(response => response.json())
+					.then(data => {
+						// Limpa o conteúdo existente na textarea
+						textarea.value = "";
+						textarea.value = data["0"]["str_ibges"].replaceAll(",","\n");
+					})
+					.catch(error => {
+						console.error("Erro ao buscar dados:", error);
+					});
+			}else{
+				textarea.value = "";
+			}
+
+		}
+
+		// Adiciona um ouvinte de evento ao elemento select
+		select.addEventListener("change", fetchIBGECodes);  
+
+	});
+});
+
+// Zero the idle timer on mouse movement.
+$(this).mousemove(function (e) {
+	global_idle_time = 0;
+});
+
+$(this).mousedown(function (e) {
+	global_idle_time = 0;
+
+	if ((Date.now()-global_initial_time)/1000>180){
+		abrir_modal_avaliacao();
 	}
-
-}
-
-// Adiciona um ouvinte de evento ao elemento select
-select.addEventListener("change", fetchIBGECodes);  
-
 });
 
+$(this).keypress(function (e) {
+	global_idle_time = 0;
 });
+
+
 //"<br><div><br><a href='https://forms.office.com/r/GZUgHnDbCu' target='_blank'>Avalie o Observatório do Cadastro Único </a>e contribua para a evolução desta ferramenta tão importante para evolução das políticas públicas sociais.</div>"
 function carregarFraseLoading(){
 		var idx_loading = randomIntFromInterval(0, conf.frases_loading.length-1);
@@ -1169,10 +1243,35 @@ function carregarFraseLoading(){
 function hideLoader() {
 	let min_duration = 3000;
 	var loadTime = window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;
-	setTimeout(() => { $(".loader").hide(); }, Math.max(min_duration - loadTime, min_duration));
+	
+	var div_graficos = document.getElementById("graficos_" + global_grupo_graficos);
+	var loading = false;
+	div_graficos.querySelectorAll('.objetoqlik').forEach((target) => {
+		var html = target.innerHTML;
+		if ($(target.id).is(':visible')){
+			if (html.indexOf('<div class="loading"></div>')>=0 | $.parseHTML(html).trim()==''){
+				loading = true;
+			}
+		}
+	}); 
+	
+	var e = $("#span_referencia_cadastro");
+	if ($("#span_referencia_cadastro").html().indexOf('...')>=0){
+		loading=true;
+	}
+	
+	if(loading==false & global_hideloader){
+		setTimeout(() => { $(".loader").hide(); }, Math.max(min_duration - loadTime, min_duration));
+		if (global_show_boasvindas){
+			$("#container_modal_boasvindas").css("display", "flex");
+		}
+	}else{
+		$(".loader").show();
+	}
 }
 
 async function selecionar_municipios_por_ibge(lista){
+		global_hideloader=false;
 		$(".loader").show();
 		var mensagem = '';
 		var invalido = 0;
@@ -1237,7 +1336,7 @@ async function selecionar_municipios_por_ibge(lista){
 			$("#container_modal_selecao_municipios").hide();
 		}
 		
-		$(".loader").hide();
+		global_hideloader=true;
 }
 
 function maximizeElement(elemId) {
@@ -1248,7 +1347,6 @@ function maximizeElement(elemId) {
 
 function callback_cookiebar(jsonSaida) {
   // Implementar o tratamento dos cookeis segundo as regras de negócio.
-  console.log(jsonSaida);
 }
 
 const cookiebarList = [];
