@@ -15,6 +15,11 @@
 	display:none;
 }
 
+.sec-ivcad-filtro{
+text-decoration:underline;
+font-weight: bolder;
+}
+ 
 
 /* container gráficos*/
 /*.graficos * {

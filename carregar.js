@@ -263,7 +263,54 @@ const campos_descricao = {
 	im_familia_pbf_bpc:"Recebe PBF ou BPC",
 	im_familia_gpte:"Famílias GPTE",
 	im_familia_recebe_beneficio: "Família recebe benefício",
-	im_familia_indigena_reside_reserva: "Família reside em reserva indígena"
+	im_familia_indigena_reside_reserva: "Família reside em reserva indígena",
+	im_ivcad_nc_dim: "IVCAD NC - Qtd. indicadores em vulnerabilidade",
+	im_ivcad_dpi_dim: "IVCAD DPI - Qtd. indicadores em vulnerabilidade",
+	im_ivcad_dca_dim: "IVCAD DCA - Qtd. indicadores em vulnerabilidade",
+	im_ivcad_tqa_dim: "IVCAD TQA - Qtd. indicadores em vulnerabilidade",
+	im_ivcad_dr_dim: "IVCAD DR - Qtd. indicadores em vulnerabilidade",
+	im_ivcad_ch_dim: "IVCAD CH - Qtd. indicadores em vulnerabilidade",
+	im_ivcad_nc1_dim: "IVCAD NC1 - Família com criança de 0 a 3 anos",
+	im_ivcad_nc2_dim: "IVCAD NC2 - Família com criança de 0 a 6 anos",
+	im_ivcad_nc3_dim: "IVCAD NC3 - Família com criança de 0 a 12 anos",
+	im_ivcad_nc4_dim: "IVCAD NC4 - Família com pessoa com deficência",
+	im_ivcad_nc5_dim: "IVCAD NC5 - Família com idoso de 60 anos ou mais",
+	im_ivcad_nc6_dim: "IVCAD NC6 - Família com metade ou menos dos membros em idade adulta (18 a 59 anos)",
+	im_ivcad_nc7_dim: "IVCAD NC7 - Família com metade ou menos dos membros do sexo feminino em idade adulta (18 a 59 anos)",
+	im_ivcad_dpi1_dim: "IVCAD DPI1 - Família com criança de 4 a 6 anos que não frequenta ou nunca frequentou creche/pré-escola/escola",
+	im_ivcad_dpi2_dim: "IVCAD DPI2 - Família com criança de 0 a 6 anos que não frequenta ou nunca frequentou creche/pré-escola/escola",
+	im_ivcad_dpi3_dim: "IVCAD DPI3 - Família com criança de 0 a 6 anos que não é filho(a) ou enteado(a) do responsável familiar",
+	im_ivcad_dca1_dim: "IVCAD DCA1 - Família com criança ou adolescente de 7 a 15 anos trabalhando",
+	im_ivcad_dca2_dim: "IVCAD DCA2 - Família com Adolescente de 15 a 17 anos fora da escola",
+	im_ivcad_dca3_dim: "IVCAD DCA3 - Família com criança ou adolescente de 7 a 17 anos fora da escola",
+	im_ivcad_dca4_dim: "IVCAD DCA4 - Família com criança ou adolescente de 10 a 17 anos analfabeto",
+	im_ivcad_dca5_dim: "IVCAD DCA5 - Família com criança ou adolescente de 10 a 17 anos com mais de 2 anos de atraso escolar",
+	im_ivcad_tqa1_dim: "IVCAD TQA1 - Família com adulto analfabeto ou analfabeto funcional",
+		im_ivcad_tqa2_dim: "IVCAD TQA2 - Família com adulto sem ensino fundamental completo",
+	im_ivcad_tqa3_dim: "IVCAD TQA3 - Família com adulto sem ensino médio completo",
+	im_ivcad_tqa4_dim: "IVCAD TQA4 - Família com nenhum adulto ocupado",
+	im_ivcad_tqa5_dim: "IVCAD TQA5 - Família com nenhum adulto ocupado no setor formal",
+	im_ivcad_tqa6_dim: "IVCAD TQA6 - Família com nenhum adulto ocupado com rendimento do trabalho superior a 1 salário mínimo",
+	im_ivcad_tqa7_dim: "IVCAD TQA7 - Família com nenhum adulto ocupado com rendimento do trabalho superior a 2 salários mínimos",
+	im_ivcad_dr1_dim: "IVCAD DR1 - Família que não possui renda",
+	im_ivcad_dr2_dim: "IVCAD DR2 - Família que Renda familiar mensal por pessoa é menor ou igual à R$ 218,00",
+	im_ivcad_dr3_dim: "IVCAD DR3 - Família que Renda familiar mensal por pessoa, excluindo-se PBF, é menor ou igual à R$ 218,00",
+	im_ivcad_dr4_dim: "IVCAD DR4 - Renda familiar mensal por pessoa, excluindo-se benefícios socioassistencias (BPC+PBF), menor ou igual à R$ 218,00",
+	im_ivcad_ch1_dim: "IVCAD CH1 - Família com domicílio particular improvisado ou situação de rua",
+	im_ivcad_ch2_dim: "IVCAD CH2 - Família com mais de 3 moradores por dormitório",
+	im_ivcad_ch3_dim: "IVCAD CH3 - Família com despesa de aluguel acima de 30% da renda",
+	im_ivcad_ch4_dim: "IVCAD CH4 - Família com despesa de aluguel",
+	im_ivcad_ch5_dim: "IVCAD CH5 - Domicílio sem parede e piso de material permanente",
+	im_ivcad_ch6_dim: "IVCAD CH6 - Domicílio sem parede ou piso de material permanente",
+	im_ivcad_ch7_dim: "IVCAD CH7 - Domicílio sem acesso adequado à água de rede geral de distribuição",
+	im_ivcad_ch8_dim: "IVCAD CH8 - Domicílio sem acesso adequado à água",
+	im_ivcad_ch9_dim: "IVCAD CH9 - Domicílio sem banheiro ou sanitário",
+	im_ivcad_ch10_dim: "IVCAD CH10 - Domicílio sem esgotamento sanitário adequado",
+	im_ivcad_ch11_dim: "IVCAD CH11 - Domicílio sem coleta de lixo de forma direta",
+	im_ivcad_ch12_dim: "IVCAD CH12 - Domicílio sem coleta de lixo de forma direta ou indireta",
+	im_ivcad_ch13_dim: "IVCAD CH13 - Domicílio sem acesso à eletricidade com medidor",
+	im_ivcad_ch14_dim: "IVCAD CH14 - Domicílio sem acesso à eletricidade"
+	
 };
 
 var global_grupo_graficos = 'introducao';
@@ -346,7 +393,7 @@ async function filtros(app, index = 0) {
 			break;
 	}
 	
-	if (i<=9){
+	if (i<=10){
 		index=i;
 		
 		if (index == 0 || index == 1) {
@@ -358,6 +405,67 @@ async function filtros(app, index = 0) {
 			if (global_field_municipio_selecionado){
 				app.getObject('QVFIL05', 'bzpXGRS');
 			}
+		}
+		
+		if (index == 0 || index == 10) {
+		
+		//NECESSIDADE DE CUIDADOS
+			app.getObject('NCQVFIL00', 'DWSmn');
+			app.getObject('NCQVFIL01', 'MYHSVw');
+			app.getObject('NCQVFIL02', 'shmzk');
+			app.getObject('NCQVFIL03', 'NFBgyEp');
+			app.getObject('NCQVFIL04', 'hGJXP');
+			app.getObject('NCQVFIL05', 'LPKyqP');
+			app.getObject('NCQVFIL06', 'aFjJg');
+			app.getObject('NCQVFIL07', 'uWGB');
+			
+		//DESENVOLVIMENTO DA PRIMEIRA INFANCIA
+			app.getObject('DPIQVFIL00', 'QJFUJ');
+			app.getObject('DPIQVFIL01', 'BgGPgzT');
+			app.getObject('DPIQVFIL02', 'yumLsj');
+			app.getObject('DPIQVFIL03', 'DYpTX');
+			
+		//DESENVOLVIMENTO DA CRIANCA E ADOLESCENTE
+			app.getObject('DCAQVFIL00', 'XXk');
+			app.getObject('DCAQVFIL01', 'zRqmY');
+			app.getObject('DCAQVFIL02', 'eWyzf');
+			app.getObject('DCAQVFIL03', 'DZnMb');
+			app.getObject('DCAQVFIL04', 'DEbXc');
+			app.getObject('DCAQVFIL05', 'MjPmdn');
+			
+		//TRABALHO E QUALIFICACAO DE ADULTOS
+			app.getObject('TQAQVFIL00', 'ZDjcGJ');
+			app.getObject('TQAQVFIL01', 'grUuh');
+			app.getObject('TQAQVFIL02', 'gpX');
+			app.getObject('TQAQVFIL03', 'MpGHwQu');
+			app.getObject('TQAQVFIL04', 'PbcfbsV');
+			app.getObject('TQAQVFIL05', 'vMGnAp');
+			app.getObject('TQAQVFIL06', 'LrtJf');
+			app.getObject('TQAQVFIL07', 'kXfrWS');
+		
+		//DISPONIBILIZACAO DE RECURSOS
+			app.getObject('DRQVFIL00', 'LjGvs');
+			app.getObject('DRQVFIL01', 'qvfmx');
+			app.getObject('DRQVFIL02', 'TVcDZ');
+			app.getObject('DRQVFIL03', 'ubhYYL');
+			app.getObject('DRQVFIL04', 'YULYL');
+		
+		//CONDICOES HABITACIONAIS
+			app.getObject('CHQVFIL00', 'KmjBPN');
+			app.getObject('CHQVFIL01', 'mgAPC');
+			app.getObject('CHQVFIL02', 'HBpFLM');
+			app.getObject('CHQVFIL03', 'cqAdqwb');
+			app.getObject('CHQVFIL04', 'dmymJW');
+			app.getObject('CHQVFIL05', 'jywVNem');
+			app.getObject('CHQVFIL06', 'dunJPsw');
+			app.getObject('CHQVFIL07', 'SqYquGq');
+			app.getObject('CHQVFIL08', 'WDmVaHC');
+			app.getObject('CHQVFIL09', 'mfwcJP');
+			app.getObject('CHQVFIL10', 'czXQVT');
+			app.getObject('CHQVFIL11', 'EQSVUKw');
+			app.getObject('CHQVFIL12', 'QFnkxA');
+			app.getObject('CHQVFIL13', 'tdmzfUA');
+			app.getObject('CHQVFIL14', 'RWCq');
 		}
 
 		if (index == 0 || index == 2) {
@@ -854,7 +962,7 @@ require(["js/qlik"], function (qlik) {
 	});
 
 	if (app === null) {
-		app = qlik.openApp('73e5c5de-0577-4aa9-a0a2-b7b359c3ae36', config);
+		app = qlik.openApp('<ID_APLICACAO>', config);
 	}
 	
 	function listener() {
